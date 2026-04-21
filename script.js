@@ -84,6 +84,35 @@ window.addEventListener("pageshow", playSiteVideos);
 window.addEventListener("pointerdown", playSiteVideos, { once: true });
 window.addEventListener("touchstart", playSiteVideos, { once: true, passive: true });
 
+if ("IntersectionObserver" in window) {
+  const videoObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const video = entry.target.querySelector("video");
+
+          if (video) {
+            const playRequest = video.play();
+
+            if (playRequest) {
+              playRequest.catch(() => {});
+            }
+          }
+        }
+      });
+    },
+    { threshold: 0.18 }
+  );
+
+  siteVideos.forEach((video) => {
+    const wrapper = video.closest(".hero-media, .structure-visual");
+
+    if (wrapper) {
+      videoObserver.observe(wrapper);
+    }
+  });
+}
+
 document.documentElement.classList.add("reveal-ready");
 
 document.querySelectorAll(".section, .trust-strip article, .color-card, .proof-card, .service-grid article, .case-grid article").forEach((element) => {
