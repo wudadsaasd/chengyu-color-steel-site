@@ -67,6 +67,9 @@ siteVideos.forEach((video) => {
   video.setAttribute("muted", "");
   video.setAttribute("playsinline", "");
   video.setAttribute("webkit-playsinline", "");
+  video.setAttribute("x5-playsinline", "");
+  video.setAttribute("x5-video-player-type", "h5");
+  video.setAttribute("x5-video-player-fullscreen", "false");
 
   ["loadedmetadata", "loadeddata", "canplay", "playing", "timeupdate"].forEach((eventName) => {
     video.addEventListener(eventName, markReady, { once: true });
