@@ -215,18 +215,16 @@ a {
 }
 
 .hero-media video {
-  opacity: 0;
+  z-index: 1;
+  opacity: 1;
 }
 
 .hero-media img {
+  z-index: 0;
   opacity: 1;
 }
 
-.hero-media.has-video video {
-  opacity: 1;
-}
-
-.hero-media.has-video img {
+.hero-media.video-failed video {
   opacity: 0;
 }
 
@@ -657,19 +655,21 @@ a {
 }
 
 .structure-visual video {
-  opacity: 0;
-}
-
-.structure-visual.has-video video {
+  z-index: 1;
   opacity: 1;
 }
 
-.structure-visual.has-video img {
+.structure-visual img {
+  z-index: 0;
+}
+
+.structure-visual.video-failed video {
   opacity: 0;
 }
 
 .tag {
   position: absolute;
+  z-index: 2;
   padding: 8px 11px;
   color: white;
   border-radius: 999px;

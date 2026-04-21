@@ -19,7 +19,6 @@ if (menuButton && mobileNav) {
 
 const structureVisual = document.querySelector(".structure-visual");
 const steps = document.querySelectorAll(".step");
-const heroMedia = document.querySelector(".hero-media");
 
 steps.forEach((step) => {
   step.addEventListener("click", () => {
@@ -35,29 +34,55 @@ if (structureVisual) {
   structureVisual.dataset.active = "roof";
 }
 
-document.querySelectorAll("video").forEach((video) => {
-  video.addEventListener(
-    "canplay",
-    () => {
-      const wrapper = video.closest(".hero-media, .structure-visual");
-      if (wrapper) {
-        wrapper.classList.add("has-video");
-      }
-    },
-    { once: true }
-  );
+const siteVideos = document.querySelectorAll("video");
 
-  video.addEventListener(
-    "error",
-    () => {
-      const wrapper = video.closest(".hero-media, .structure-visual");
-      if (wrapper) {
-        wrapper.classList.remove("has-video");
-      }
-    },
-    { once: true }
-  );
+const playSiteVideos = () => {
+  siteVideos.forEach((video) => {
+    const playRequest = video.play();
+
+    if (playRequest) {
+      playRequest.catch(() => {});
+    }
+  });
+};
+
+siteVideos.forEach((video) => {
+  const wrapper = video.closest(".hero-media, .structure-visual");
+  const markReady = () => {
+    if (wrapper) {
+      wrapper.classList.add("has-video");
+      wrapper.classList.remove("video-failed");
+    }
+  };
+  const markFailed = () => {
+    if (wrapper) {
+      wrapper.classList.remove("has-video");
+      wrapper.classList.add("video-failed");
+    }
+  };
+
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+
+  ["loadedmetadata", "loadeddata", "canplay", "playing", "timeupdate"].forEach((eventName) => {
+    video.addEventListener(eventName, markReady, { once: true });
+  });
+
+  video.addEventListener("error", markFailed, { once: true });
+
+  if (video.readyState >= 2) {
+    markReady();
+  }
 });
+
+playSiteVideos();
+window.addEventListener("pageshow", playSiteVideos);
+window.addEventListener("pointerdown", playSiteVideos, { once: true });
+window.addEventListener("touchstart", playSiteVideos, { once: true, passive: true });
 
 document.documentElement.classList.add("reveal-ready");
 
